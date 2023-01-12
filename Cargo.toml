@@ -1,0 +1,30 @@
+[package]
+name = "nclbk"
+version = "0.1.0"
+authors = ["Dan Levin <dan@badpacket.in>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+# https://dev.to/yjdoc2/make-a-combined-library-and-binary-project-in-rust-d4f
+[lib]
+name = "libnclbk"
+path = "src/libnclbk.rs"
+
+#[[bin]]
+#name = "nclbkcli"
+#path = "src/bin/nclbkcli.rs"
+
+
+[dependencies]
+anyhow = "1.0.68"
+base64 = "0.13.0"
+log = "0.4.14"
+reqwest = { version = "0.11.9", features = ["json", "rustls-tls"] }
+serde = { version = "1.0.152", features = ["derive"] }
+serde_json = "1.0.76"
+tokio = { version = "1.15.0", features = ["full"] }
+url = "2.2.2"
+
+[dev-dependencies]
+httpmock = "0.6.7"

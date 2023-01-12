@@ -36,21 +36,22 @@ pub struct Bookmark {
 pub struct BookmarkAPIClient {
     auth_id: String,
     auth_secret: String,
-    base_url: Url,
+    root_url: Url,
     bookmarks_url: Url,
     tags_url: Url,
     client: reqwest::Client,
 }
 
 impl BookmarkAPIClient {
-    pub fn new(auth_id: String, auth_secret: String, base_url: Url) -> Result<BookmarkAPIClient> {
-        let bookmarks_url = base_url.join("/index.php/apps/bookmarks/public/rest/v2/bookmark")?;
-        let tags_url = base_url.join("/index.php/apps/bookmarks/public/rest/v2/tag")?;
+    pub fn new(auth_id: String, auth_secret: String, root_url: Url) -> Result<BookmarkAPIClient> {
+        let base_url = root_url.join("/index.php/apps/bookmarks/public/rest/v2")?;
+        let bookmarks_url = base_url.join("/bookmark")?;
+        let tags_url = base_url.join("/tag")?;
 
         Ok(BookmarkAPIClient {
             auth_id,
             auth_secret,
-            base_url,
+            root_url,
             bookmarks_url,
             tags_url,
             client: reqwest::Client::new(),
@@ -167,7 +168,13 @@ impl BookmarkAPIClient {
         Ok(ecode.success())
     }
 
-    pub async fn delete_bookmark(&self, request_url: String) -> Result<bool, reqwest::Error> {
+    pub async fn delete_bookmark(&self, id: u64) -> Result<bool, reqwest::Error> {
+        let request_url = format!(
+            "{bookmarks_url}/{id}",
+            bookmarks_url= self.bookmarks_url,
+            id = id,
+        );
+
         let encoded_basic_auth = encode(format!("{}:{}", self.auth_id, self.auth_secret));
         let response = self
             .client
@@ -215,14 +222,7 @@ impl BookmarkAPIClient {
             };
 
             if download_success && do_remove_bookmark {
-                let id: String = bookmark.id.to_string();
-                let request_url = format!(
-                    "{base}/index.php/apps/bookmarks/public/rest/v2/bookmark/{id}",
-                    base = self.base_url,
-                    id = id,
-                );
-
-                self.delete_bookmark(request_url).await?;
+                self.delete_bookmark(bookmark.id).await?;
                 log::info!("Removed Bookmark: {}\n{}", bookmark.title, url);
             } else {
                 log::info!("Would have deleted url: {}", url);
@@ -241,7 +241,7 @@ mod tests {
     use httpmock::Mock;
 
     fn base_url(server: &MockServer) -> String {
-        return server.url("").to_string();
+        return server.url("/index.php/apps/bookmarks/public/rest/v2").to_string();
     }
 
     fn get_api_client(mock_server: &MockServer) -> Result<BookmarkAPIClient> {
@@ -259,9 +259,9 @@ mod tests {
 
         let client = get_api_client(&server)?;
         let expected_bookmarks_url = Url::parse(base_url)?
-            .join("/index.php/apps/bookmarks/public/rest/v2/bookmark")?;
+            .join("/bookmark")?;
         let expected_tags_url =
-            Url::parse(base_url)?.join("/index.php/apps/bookmarks/public/rest/v2/tag")?;
+            Url::parse(base_url)?.join("/tag")?;
         assert!(client.bookmarks_url == expected_bookmarks_url);
         assert!(client.tags_url == expected_tags_url);
         Ok(())
@@ -270,7 +270,7 @@ mod tests {
     #[tokio::test]
     async fn bookmark_api_client_reads_bookmarks() -> Result<()> {
         let server: MockServer = MockServer::start();
-        let bookmarks_path = "/index.php/apps/bookmarks/public/rest/v2/bookmark";
+        let bookmarks_path = "/bookmark";
 
         let hello_mock: Mock = server.mock(|when, then| {
             when.method(GET)
@@ -285,7 +285,7 @@ mod tests {
         let filters = vec![];
         let unavailable = false;
         let bookmarks = client.read_bookmarks(query_tags, filters, unavailable).await?;
-        println!("{:?}", bookmarks);
+        hello_mock.assert();
         assert!(bookmarks.len() == 1);
         assert!(bookmarks[0].id == 836);
         assert!(bookmarks[0].url == "https://great.example/");

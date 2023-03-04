@@ -171,7 +171,7 @@ impl BookmarkAPIClient {
     pub async fn delete_bookmark(&self, id: u64) -> Result<bool, reqwest::Error> {
         let request_url = format!(
             "{bookmarks_url}/{id}",
-            bookmarks_url= self.bookmarks_url,
+            bookmarks_url = self.bookmarks_url,
             id = id,
         );
 
@@ -241,7 +241,9 @@ mod tests {
     use httpmock::Mock;
 
     fn base_url(server: &MockServer) -> String {
-        return server.url("/index.php/apps/bookmarks/public/rest/v2").to_string();
+        return server
+            .url("/index.php/apps/bookmarks/public/rest/v2")
+            .to_string();
     }
 
     fn get_api_client(mock_server: &MockServer) -> Result<BookmarkAPIClient> {
@@ -258,10 +260,8 @@ mod tests {
         let base_url = &base_url(&server);
 
         let client = get_api_client(&server)?;
-        let expected_bookmarks_url = Url::parse(base_url)?
-            .join("/bookmark")?;
-        let expected_tags_url =
-            Url::parse(base_url)?.join("/tag")?;
+        let expected_bookmarks_url = Url::parse(base_url)?.join("/bookmark")?;
+        let expected_tags_url = Url::parse(base_url)?.join("/tag")?;
         assert!(client.bookmarks_url == expected_bookmarks_url);
         assert!(client.tags_url == expected_tags_url);
         Ok(())
@@ -284,7 +284,9 @@ mod tests {
         let query_tags = vec![];
         let filters = vec![];
         let unavailable = false;
-        let bookmarks = client.read_bookmarks(query_tags, filters, unavailable).await?;
+        let bookmarks = client
+            .read_bookmarks(query_tags, filters, unavailable)
+            .await?;
         hello_mock.assert();
         assert!(bookmarks.len() == 1);
         assert!(bookmarks[0].id == 836);

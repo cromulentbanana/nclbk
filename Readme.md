@@ -1,4 +1,4 @@
-A Nextcloud Bookmark API.
+A Nextcloud Bookmark API Client.
 
 # Development build/run
 rust stable >=1.46
@@ -15,7 +15,7 @@ rust stable >=1.46
 
 `cargo build --release`
 
-# Notes for Me
+# Useful Documentation
 
 * [Nextcloud Bookmark API](https://nextcloud-bookmarks.readthedocs.io/en/latest/bookmark.html)
 * https://redbeardlab.com/2019/05/07/rust-and-glibc-version/

@@ -1,8 +1,16 @@
 [package]
 name = "nclbk"
-version = "0.1.0"
+version = "0.0.0"
 authors = ["Dan Levin <dan@badpacket.in>"]
 edition = "2021"
+license = "MIT"
+description = "A Nextcloud Bookmarks API Client"
+repository = "https://github.com/cromulentbanana/nclbk/"
+keywords = ["nextcloud", "bookmarks", "api"]
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

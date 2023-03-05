@@ -33,6 +33,7 @@ pub struct Bookmark {
     user_id: Option<String>,
 }
 
+#[derive(Debug)]
 pub struct BookmarkAPIClient {
     auth_id: String,
     auth_secret: String,

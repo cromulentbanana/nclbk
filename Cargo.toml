@@ -1,6 +1,6 @@
 [package]
 name = "nclbk"
-version = "0.0.0"
+version = "0.0.1"
 authors = ["Dan Levin <dan@badpacket.in>"]
 edition = "2021"
 license = "MIT"

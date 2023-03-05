@@ -1,6 +1,6 @@
 A Nextcloud Bookmark API Client.
 
-Currently a first draft implementation, not stable or ready for consumption.
+Currently a first draft implementation, not stable or ready for consumption. Feedback and contributions welcome.
 
 # Run Tests
 rust stable >=1.46

@@ -11,6 +11,8 @@ jobs:
         EXAMPLE: foo
     steps:
       - uses: actions/checkout@main
+      - name: Apt Update
+        run: apt update
       - name: Install openssl-sys
         run: apt install pkg-config
       - name: Run cargo check

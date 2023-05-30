@@ -14,7 +14,7 @@ jobs:
       - name: Apt Update
         run: DEBIAN_FRONTEND=noninteractive apt update
       - name: Install openssl-sys
-        run: DEBIAN_FRONTEND=noninteractive apt install pkg-config -y
+        run: DEBIAN_FRONTEND=noninteractive apt install pkg-config libssl-dev -y
       - name: Run cargo check
         run: cargo check
       - name: Run cargo test

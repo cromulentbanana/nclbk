@@ -12,9 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - name: Apt Update
-        run: DEBIAN_FRONTEND=noninteractive apt update
+        run: DEBIAN_FRONTEND=noninteractive apt-get update
       - name: Install openssl-sys
-        run: DEBIAN_FRONTEND=noninteractive apt install pkg-config libssl-dev -y
+        run: DEBIAN_FRONTEND=noninteractive apt-get install pkg-config libssl-dev git -y
       - name: Run cargo check
         run: cargo check
       - name: Run cargo test

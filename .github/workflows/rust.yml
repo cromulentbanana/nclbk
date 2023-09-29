@@ -11,8 +11,10 @@ jobs:
         EXAMPLE: foo
     steps:
       - uses: actions/checkout@main
+      - name: Apt Update
+        run: DEBIAN_FRONTEND=noninteractive apt-get update
       - name: Install openssl-sys
-        run: apt install pkg-config
+        run: DEBIAN_FRONTEND=noninteractive apt-get install pkg-config libssl-dev git -y
       - name: Run cargo check
         run: cargo check
       - name: Run cargo test
